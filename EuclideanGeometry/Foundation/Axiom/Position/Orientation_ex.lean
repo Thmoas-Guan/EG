@@ -15,8 +15,10 @@ theorem pts_are_distinct_of_two_rays_of_angle (ang : Angle P) (nontriv : ang.IsN
 
 -- If a point does not lie on the line associated to the ray, then it is either on the left or the right of the ray
 
+--already discussed in the main file
 theorem Ray.left_iff_not_right_of_not_lies_on {a : P} {l : Ray P} (h : ¬ (a LiesOn l)) : (a LiesOnLeft l) ↔ ¬ (a LiesOnRight l) := sorry
 
+--already discussed in the main file
 theorem Ray.not_lies_on_iff_left_or_right (a : P) (l : Ray P) : (¬ (a LiesOn l)) ↔ (a LiesOnLeft l) ∨ (a LiesOnRight l) := sorry
 
 end EuclidGeom
