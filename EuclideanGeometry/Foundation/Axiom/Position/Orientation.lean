@@ -537,7 +537,8 @@ theorem LiesOnLeft_of_ang_pos (A : P) (ray : Ray P) [ne : PtNe A ray.source] (h 
     apply SegND.length_pos
   positivity
 
-lemma SB_class {a b : ℝ} (apos : a > 0) (bneg : b < 0) : a * b < 0 := by
+--silly class problem , better to be solved inside the theorem
+lemma neg_of_pos_mul_neg {a b : ℝ} (apos : a > 0) (bneg : b < 0) : a * b < 0 := by
   have : a * (-b) > 0 := by
     have : -b > 0 := by linarith
     positivity
@@ -553,12 +554,11 @@ theorem LiesOnRight_of_ang_neg (A : P) (ray : Ray P) [ne : PtNe A ray.source] (h
   have sin : (sin ((Angle.mk ray.source  ray.toDir (RAY ray.source A).toDir).value)) < 0 := by
     apply sin_lt_zero_of_isNeg
     exact h
-  --have -sin : -(sin ((Angle.mk ray.source  ray.toDir (RAY ray.source A).toDir).value)) > 0 := by
-    --linarith
+  --have negsin : -(sin ((Angle.mk ray.source  ray.toDir (RAY ray.source A).toDir).value)) > 0 := by sorry
   have len : (SEG ray.source A).length > 0 := by
     show (SEG_nd ray.source A).length > 0
     apply SegND.length_pos
-  exact SB_class len sin
+  exact neg_of_pos_mul_neg len sin
 
 --Is discussed with relative side
 --theorem no_intersect_of_same_odist_sign (A B : P) (l : DirLine P) (signeq : odist_sign A l * odist_sign B l = 1) : ∀ (C : P) , Seg.IsOn C (SEG A B) → ¬ Line.IsOn C l := sorry
@@ -1578,9 +1578,12 @@ scoped notation:5 A:max "and" B:max " LiesOnOppositeSide " C:max => IsOnOpposite
 section intersect_of_ray
 
 /- Statement of his theorem should change, since ray₀.source ≠ ray₂.source. -/
-theorem intersect_of_ray_on_left_iff (ray₁ ray₂ : Ray P) (h : ray₂.source ≠ ray₁.source) : let ray₀ := Ray.mk_pt_pt ray₁.source ray₂.source h; (0 < (Angle.mk_two_ray_of_eq_source ray₀ ray₁ rfl).value.toReal) ∧ ((Angle.mk_two_ray_of_eq_source ray₀ ray₁ rfl).value.toReal < (Angle.mk_two_ray_of_eq_source ray₀ ray₂ sorry).value.toReal) ∧ ((Angle.mk_two_ray_of_eq_source ray₀ ray₂ sorry).value.toReal < π) ↔ (∃ A : P, (A LiesOn ray₁) ∧ (A LiesOn ray₂) ∧ (A LiesOnLeft ray₀))  := sorry
+--theorem intersect_of_ray_on_left_iff (ray₁ ray₂ : Ray P) (h : ray₂.source ≠ ray₁.source) : let ray₀ := Ray.mk_pt_pt ray₁.source ray₂.source h; (0 < (Angle.mk_two_ray_of_eq_source ray₀ ray₁ rfl).value.toReal) ∧ ((Angle.mk_two_ray_of_eq_source ray₀ ray₁ rfl).value.toReal < (Angle.mk_two_ray_of_eq_source ray₀ ray₂ sorry).value.toReal) ∧ ((Angle.mk_two_ray_of_eq_source ray₀ ray₂ sorry).value.toReal < π) ↔ (∃ A : P, (A LiesOn ray₁) ∧ (A LiesOn ray₂) ∧ (A LiesOnLeft ray₀))  := sorry
 
-lemma SB_simp (a b : ℝ) (h : b ≠ 0): a + (-a / b) * b = 0 := by field_simp
+--silly simp problem , better to be solved inside the theorem
+lemma div_mul_ne0_eq_self (a b : ℝ) (h : b ≠ 0): a + (-a / b) * b = 0 := by field_simp
+
+--the iff statement of exist inx of DirLine and ray except the degenerate ones
 
 theorem exist_inx_DirLine_Ray_of_source_LiesOnLeft_and_included_ang_neg (ray : Ray P) (dl : DirLine P) (left : ray.source LiesOnLeft dl)(h : (ray.toDir -ᵥ dl.toDir).IsNeg ) : ∃ C : P , (C IsInxOf ray dl) ∧ (C LiesInt ray) := by
   rcases (Quotient.exists_rep dl) with ⟨r , h0⟩
@@ -1640,7 +1643,7 @@ theorem exist_inx_DirLine_Ray_of_source_LiesOnLeft_and_included_ang_neg (ray : R
         let b : ℝ :=(Vec.det r.toDir.unitVec ray.toDir.unitVec)
         show odist A r + -odist A r / b * b = 0
         have ne0 : b ≠ 0 := ne0
-        exact SB_simp (odist A r) b ne0
+        exact div_mul_ne0_eq_self (odist A r) b ne0
   have on_dl : B LiesOn dl := by
     simp only [← h0]
     show B LiesOn (toLine r)
@@ -1696,7 +1699,7 @@ theorem exist_inx_DirLine_Ray_of_source_LiesOnRight_and_included_ang_pos (ray : 
         let b : ℝ :=(Vec.det r.toDir.unitVec ray.toDir.unitVec)
         show odist A r + -odist A r / b * b = 0
         have ne0 : b ≠ 0 := ne0
-        exact SB_simp (odist A r) b ne0
+        exact div_mul_ne0_eq_self (odist A r) b ne0
   have on_dl : B LiesOn dl := by
     simp only [← h0]
     show B LiesOn (toLine r)
@@ -1708,7 +1711,7 @@ theorem exist_inx_DirLine_Ray_of_source_LiesOnRight_and_included_ang_pos (ray : 
   simp only [on_ray,on_dl]
   simp only [and_self]
 
-
+--the iff statement of exist inx of ray ray only except the degenerate ones
 
 theorem exist_inx_ray_ray_of_ang_pos_pos_gt (ray₁ ray₂ : Ray P) [ne : PtNe ray₁.source ray₂.source] (h₁ : (Angle.mk ray₁.source (SEG_nd ray₁.source ray₂.source).toDir ray₁.toDir).IsPos) (h₂ : (Angle.mk ray₂.source (SEG_nd ray₁.source ray₂.source).toDir ray₂.toDir).IsPos) (gt : ((Angle.mk ray₂.source (SEG_nd ray₁.source ray₂.source).toDir ray₂.toDir).value - (Angle.mk ray₁.source (SEG_nd ray₁.source ray₂.source).toDir ray₁.toDir).value).IsPos ): ∃ C : P , C IsInxOf ray₁ ray₂ := by
   have negDir: (SEG_nd ray₁.source ray₂.source).toDir = -(SEG_nd ray₂.source ray₁.source).toDir := by
