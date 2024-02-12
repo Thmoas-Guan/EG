@@ -12,7 +12,7 @@ namespace Problem_3
 In (convex) quadrilateral $A B D C$,$AB = AC$, $BD = CD$.
 Prove that $\angle A B D = -\angle A C D$
 -/
-structure Setting  (Plane : Type _) [EuclideanPlane Plane] where
+structure Setting  (Plane : Type*) [EuclideanPlane Plane] where
   --In (convex) quadrilateral $A B D C$,$AB = AC$, $BD = CD$.
   A : Plane
   B : Plane
@@ -27,18 +27,18 @@ structure Setting  (Plane : Type _) [EuclideanPlane Plane] where
   --$A \ne C$ and $D \ne B$ for $\angle A C D$
   A_ne_C : A ≠ C := (Quadrilateral_cvx.nd₁₄ (QDR_cvx A B D C cvx_ABDC)).symm
   D_ne_C : D ≠ C := (Quadrilateral_cvx.nd₃₄ (QDR_cvx A B D C cvx_ABDC)).symm
-theorem Result {Plane : Type _} [EuclideanPlane Plane] (e : Setting Plane) : ∠  e.A e.B e.D (e.A_ne_B) (e.D_ne_B) = - ∠ e.A e.C e.D (e.A_ne_C) (e.D_ne_C):= by
+theorem Result {Plane : Type*} [EuclideanPlane Plane] (e : Setting Plane) : ∠  e.A e.B e.D (e.A_ne_B) (e.D_ne_B) = - ∠ e.A e.C e.D (e.A_ne_C) (e.D_ne_C):= by
   /-
   Because $AB = AC$ ,we have $\angle A B C = -\angle A C B$.
   Because $DB = DC$ ,we have $\angle D B C = -\angle D C B$
   $\angle A B D = \angle A B C - \angle D B C = \angle D C B - \angle A C B = --\angle A C D$
   -/
-  have h₁ : ¬ collinear e.A e.B e.C := by
+  have h₁ : ¬ Collinear e.A e.B e.C := by
     exact (Quadrilateral_cvx.not_collinear₁₂₄ (QDR_cvx e.A e.B e.D e.C e.cvx_ABDC))
-  have h₂ : ¬ collinear e.D e.B e.C := by
-    have h₂' : ¬ collinear e.B e.D e.C := by
+  have h₂ : ¬ Collinear e.D e.B e.C := by
+    have h₂' : ¬ Collinear e.B e.D e.C := by
       exact (Quadrilateral_cvx.not_collinear₂₃₄ (QDR_cvx e.A e.B e.D e.C e.cvx_ABDC))
-    apply flip_collinear_fst_snd.mt h₂'
+    apply Collinear.perm₂₁₃.mt h₂'
   have C_ne_B : e.C ≠ e.B := by
     exact (Quadrilateral_cvx.nd₂₄ (QDR_cvx e.A e.B e.D e.C e.cvx_ABDC))
   --Because $AB = AC$ ,we have $\angle A B C = -\angle A C B$.

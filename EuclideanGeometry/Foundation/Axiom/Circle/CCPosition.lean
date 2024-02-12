@@ -4,7 +4,7 @@ import EuclideanGeometry.Foundation.Axiom.Triangle.Congruence_trash
 noncomputable section
 namespace EuclidGeom
 
-variable {P : Type _} [EuclideanPlane P]
+variable {P : Type*} [EuclideanPlane P]
 
 section position
 
@@ -106,7 +106,7 @@ theorem extangent_pt_lieson_circles {ω₁ : Circle P} {ω₂ : Circle P} (h : �
           rw [norm_smul, Dir.norm_unitVec, mul_one, Real.norm_of_nonneg ω₂.rad_pos.le]
   exact this
 
-theorem extangent_pt_centers_collinear {ω₁ : Circle P} {ω₂ : Circle P} (h : ω₁ Extangent ω₂) : collinear ω₁.center (Extangentpt h) ω₂.center := by
+theorem extangent_pt_centers_collinear {ω₁ : Circle P} {ω₂ : Circle P} (h : ω₁ Extangent ω₂) : Collinear ω₁.center (Extangentpt h) ω₂.center := by
   haveI : PtNe ω₁.center ω₂.center := ⟨extangent_centers_distinct h⟩
   have : VEC ω₁.center (Extangentpt h) = (ω₁.radius * ‖VEC ω₁.center ω₂.center‖⁻¹) • (VEC ω₁.center ω₂.center) := by
     calc
@@ -115,7 +115,7 @@ theorem extangent_pt_centers_collinear {ω₁ : Circle P} {ω₂ : Circle P} (h 
         simp
       _ = ω₁.radius • (‖VEC ω₁.center ω₂.center‖⁻¹ • (VEC ω₁.center ω₂.center)) := rfl
       _ = (ω₁.radius * ‖VEC ω₁.center ω₂.center‖⁻¹) • (VEC ω₁.center ω₂.center) := by apply smul_smul
-  apply flip_collinear_snd_trd (collinear_of_vec_eq_smul_vec this)
+  apply Collinear.perm₁₃₂ (collinear_of_vec_eq_smul_vec this)
 
 end CC
 
@@ -160,7 +160,9 @@ theorem intangent_pt_lieson_circles {ω₁ : Circle P} {ω₂ : Circle P} (h : �
         have : VEC_nd ω₁.center ω₂.center = - VEC_nd ω₂.center ω₁.center := by
           ext; simp only [ne_eq, RayVector.coe_neg, VecND.coe_mkPtPt]
           rw [neg_vec]
-        have : (VEC_nd ω₁.center ω₂.center).toDir.unitVec = - (VEC_nd ω₂.center ω₁.center).toDir.unitVec := by rw [this]; simp
+        have : (VEC_nd ω₁.center ω₂.center).toDir.unitVec = - (VEC_nd ω₂.center ω₁.center).toDir.unitVec := by
+          rw [this]
+          simp only [VecND.neg_toDir, Dir.neg_unitVec]
         rw [this, smul_neg, sub_eq_add_neg]
       _ = ‖(‖VEC_nd ω₁.center ω₂.center‖ + ω₁.radius) • (VEC_nd ω₁.center ω₂.center).toDir.unitVec‖ := by
         rw [add_smul, VecND.norm_smul_toDir_unitVec]
@@ -176,7 +178,7 @@ theorem intangent_pt_lieson_circles {ω₁ : Circle P} {ω₂ : Circle P} (h : �
   show Circle.IsOn (Intangentpt h) ω₂
   exact this
 
-theorem intangentpt_centers_collinear {ω₁ : Circle P} {ω₂ : Circle P} (h : ω₁ Intangent ω₂) : collinear ω₁.center ω₂.center (Intangentpt h) := by
+theorem intangentpt_centers_collinear {ω₁ : Circle P} {ω₂ : Circle P} (h : ω₁ Intangent ω₂) : Collinear ω₁.center ω₂.center (Intangentpt h) := by
   haveI : PtNe ω₁.center ω₂.center := ⟨h.2⟩
   have : VEC ω₁.center (Intangentpt h) = (- ω₁.radius * ‖(VEC ω₁.center ω₂.center)‖⁻¹) • VEC ω₁.center ω₂.center := by
     calc
@@ -184,12 +186,12 @@ theorem intangentpt_centers_collinear {ω₁ : Circle P} {ω₂ : Circle P} (h :
         unfold Intangentpt
         simp
       _ = ω₁.radius • (- (VEC_nd ω₁.center ω₂.center).toDir.unitVec) := by
-        -- note: 为什么没有 neg_vecND
+        -- note: 为什么没有 neg_vecND `现在有了`
         trans ω₁.radius • (-VEC_nd ω₁.center ω₂.center).toDir.unitVec
         · unfold VecND.mkPtPt Vec.mkPtPt
           congr
           rw [← neg_eq_iff_eq_neg, neg_vsub_eq_vsub_rev]
-        · simp
+        · simp only [VecND.neg_toDir, Dir.neg_unitVec, smul_neg]
       _ = - ω₁.radius • (VEC_nd ω₁.center ω₂.center).toDir.unitVec := by
         rw [smul_neg, neg_smul]
       _ = (- ω₁.radius) • ‖VEC ω₁.center ω₂.center‖⁻¹ • VEC ω₁.center ω₂.center := rfl
@@ -249,7 +251,7 @@ lemma intersected_centers_distinct {ω₁ : Circle P} {ω₂ : Circle P} (h : ω
 end CC
 
 @[ext]
-structure CCInxpts (P : Type _) [EuclideanPlane P] where
+structure CCInxpts (P : Type*) [EuclideanPlane P] where
   left : P
   right : P
 
@@ -298,7 +300,7 @@ def Inxpts {ω₁ : Circle P} {ω₂ : Circle P} (h : ω₁ Intersect ω₂) : C
   right := (- Real.sqrt (ω₁.radius ^ 2 - (radical_axis_dist_to_the_first ω₁ ω₂) ^ 2) * Complex.I + (radical_axis_dist_to_the_first ω₁ ω₂)) • (VEC_nd ω₁.center ω₂.center (intersected_centers_distinct h).symm).toDir.unitVec +ᵥ ω₁.center
 
 theorem inx_pts_distinct {ω₁ : Circle P} {ω₂ : Circle P} (h : ω₁ Intersect ω₂) : (Inxpts h).left ≠ (Inxpts h).right := by
-  apply (ne_iff_vec_ne_zero _ _).mpr
+  apply ne_iff_vec_ne_zero.mpr
   unfold Vec.mkPtPt Inxpts
   simp only [neg_mul, vadd_vsub_vadd_cancel_right, ne_eq, ← sub_smul]
   simp only [add_sub_add_right_eq_sub, sub_neg_eq_add, smul_eq_zero, add_self_eq_zero, mul_eq_zero,
@@ -391,11 +393,11 @@ theorem inx_pts_lieson_circles {ω₁ : Circle P} {ω₂ : Circle P} (h : ω₁ 
       apply Real.sqrt_sq (by linarith [ω₂.rad_pos])
       apply mul_ne_zero (by norm_num) (dist_ne_zero.mpr cne.out)
 
-lemma inx_pts_not_collinear {ω₁ : Circle P} {ω₂ : Circle P} (h : ω₁ Intersect ω₂) : (¬ collinear (Inxpts h).left ω₁.center ω₂.center) ∧ (¬ collinear (Inxpts h).right ω₁.center ω₂.center) := by
+lemma inx_pts_not_collinear {ω₁ : Circle P} {ω₂ : Circle P} (h : ω₁ Intersect ω₂) : (¬ Collinear (Inxpts h).left ω₁.center ω₂.center) ∧ (¬ Collinear (Inxpts h).right ω₁.center ω₂.center) := by
   constructor
   · intro hc
     set tri : Triangle P := ▵ (Inxpts h).left ω₁.center ω₂.center with tri_def
-    have : collinear tri.1 tri.2 tri.3 := hc
+    have : Collinear tri.1 tri.2 tri.3 := hc
     rw [Triangle.edge_sum_eq_edge_iff_collinear] at this
     rcases this with heq | (heq | heq)
     · rw [tri_def] at heq
@@ -430,7 +432,7 @@ lemma inx_pts_not_collinear {ω₁ : Circle P} {ω₂ : Circle P} (h : ω₁ Int
     linarith
   intro hc
   set tri : Triangle P := ▵ (Inxpts h).right ω₁.center ω₂.center with tri_def
-  have : collinear tri.1 tri.2 tri.3 := hc
+  have : Collinear tri.1 tri.2 tri.3 := hc
   rw [Triangle.edge_sum_eq_edge_iff_collinear] at this
   rcases this with heq | (heq | heq)
   · rw [tri_def] at heq
@@ -513,7 +515,7 @@ theorem inx_pts_line_perp_center_line {ω₁ : Circle P} {ω₂ : Circle P} (h :
         rw [← hn]
         show ‖VEC (Inxpts h).left (Inxpts h).right‖ ≠ 0
         apply norm_ne_zero_iff.mpr
-        apply (ne_iff_vec_ne_zero _ _).mp (inx_pts_distinct h).symm
+        apply ne_iff_vec_ne_zero.mp (inx_pts_distinct h).symm
   have hdir: (VEC_nd (Inxpts h).left (Inxpts h).right (inx_pts_distinct h).symm).toDir = - (Dir.I * (VEC_nd ω₁.center ω₂.center (intersected_centers_distinct h).symm).toDir) := by
     ext; rw [this]; rw [this]
   calc

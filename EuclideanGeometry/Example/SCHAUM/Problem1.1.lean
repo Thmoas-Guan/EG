@@ -4,7 +4,7 @@ noncomputable section
 
 namespace EuclidGeom
 
-variable {P : Type _} [EuclideanPlane P]
+variable {P : Type*} [EuclideanPlane P]
 
 namespace Schaum
 
@@ -16,7 +16,7 @@ Prove that $DM = EM$.
 -/
 /--/
 --Let $\triangle ABC$ be an isosceles triangle in which $AB = AC$.
-variable {A B C : P} {not_collinear_ABC: ¬ collinear A B C} {isoceles_ABC: (▵ A B C).IsIsoceles}
+variable {A B C : P} {not_collinear_ABC: ¬ Collinear A B C} {isoceles_ABC: (▵ A B C).IsIsoceles}
 --Let $D$ be a point on $AB$.
 variable {D : P} {D_on_seg: D LiesInt (SEG A B)}
 --Let $E$ be a point on $AC$
@@ -26,12 +26,12 @@ variable {E_ray_position : (SEG A E).length = (SEG A D).length}
 --Let $M$ be the midpoint of $BC$.
 variable {M : P} {median_M_position : M = (SEG B C).midpoint}
 -/
-structure Setting (Plane : Type _) [EuclideanPlane Plane] where
+structure Setting (Plane : Type*) [EuclideanPlane Plane] where
   --Let $\triangle ABC$ be an isosceles triangle in which $AB = AC$.
   A : Plane
   B : Plane
   C : Plane
-  not_collinear_ABC : ¬ collinear A B C
+  not_collinear_ABC : ¬ Collinear A B C
   isoc_ABC : (▵ A B C).IsIsoceles
   --Let $D$ be a point on $AB$.
   D : Plane
@@ -46,7 +46,7 @@ structure Setting (Plane : Type _) [EuclideanPlane Plane] where
   midpoint_M : M = (SEG B C).midpoint
 
 --Prove that $DM = EM$.
-theorem Result {Plane : Type _} [EuclideanPlane Plane] (e : Setting Plane) : (SEG e.D e.M).length = (SEG e.E e.M).length := by
+theorem Result {Plane : Type*} [EuclideanPlane Plane] (e : Setting Plane) : (SEG e.D e.M).length = (SEG e.E e.M).length := by
   /-In the isoceles triangle $ABC$, we have $AB = AC$.
     Meanwhile $AE = AD$
     We have $BD = AB - AD = AC - AE = CE$.
@@ -66,9 +66,9 @@ theorem Result {Plane : Type _} [EuclideanPlane Plane] (e : Setting Plane) : (SE
       _ = (SEG e.C e.A).length := e.isoc_ABC.symm
       _ = (SEG e.A e.C).length := length_of_rev_eq_length'
   --Triangle B D M nondegenerate.
-  have h₁ : ¬ collinear e.B e.D e.M := by sorry
+  have h₁ : ¬ Collinear e.B e.D e.M := by sorry
   --Triangle C E M nondegenerate.
-  have h₂ : ¬ collinear e.C e.E e.M := by sorry
+  have h₂ : ¬ Collinear e.C e.E e.M := by sorry
   --Points not equal for the definition of angle is not invalid.
   --$D \ne B$ and $M \ne B$ for ∠ D B M.
   haveI d_ne_b : PtNe e.D e.B := ⟨ (ne_of_not_collinear h₁).2.2⟩

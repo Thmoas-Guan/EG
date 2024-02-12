@@ -9,6 +9,7 @@ import EuclideanGeometry.Foundation.Axiom.Linear.Ray_trash
 import EuclideanGeometry.Foundation.Axiom.Linear.Collinear
 import EuclideanGeometry.Foundation.Axiom.Linear.Line
 import EuclideanGeometry.Foundation.Axiom.Linear.Class
+import EuclideanGeometry.Foundation.Axiom.Linear.Order
 import EuclideanGeometry.Foundation.Axiom.Linear.Parallel
 import EuclideanGeometry.Foundation.Axiom.Linear.Perpendicular
 /- Axiom.Position -/
@@ -32,7 +33,7 @@ import EuclideanGeometry.Foundation.Axiom.Triangle.IsocelesTriangle
 import EuclideanGeometry.Foundation.Axiom.Circle.Basic
 import EuclideanGeometry.Foundation.Axiom.Circle.CCPosition
 import EuclideanGeometry.Foundation.Axiom.Circle.LCPosition
-import EuclideanGeometry.Foundation.Axiom.Circle.IncribedAngle
+import EuclideanGeometry.Foundation.Axiom.Circle.InscribedAngle
 import EuclideanGeometry.Foundation.Axiom.Circle.CirclePower
 
 /- Tactic -/

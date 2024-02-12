@@ -13,12 +13,12 @@ namespace Shan_Problem_1_7
 
 Prove that $CD = AB / 2$. -/
 
-structure Setting (Plane : Type _) [EuclideanPlane Plane] where
+structure Setting (Plane : Type*) [EuclideanPlane Plane] where
   -- Let $\triangle ABC$ be a nontrivial triangle in which $\angle ACB= \pi/2$.
   A : Plane
   B : Plane
   C : Plane
-  not_collinear_ABC : ¬ collinear A B C
+  not_collinear_ABC : ¬ Collinear A B C
   -- Claim :$C \ne A$
   C_ne_A : C ≠ A :=
     -- This is because vertices $A, C$ of a nondegenerate triangle are distinct.
@@ -35,7 +35,7 @@ structure Setting (Plane : Type _) [EuclideanPlane Plane] where
   D : Plane
   hD : D = (SEG A B).midpoint
 
-theorem result {Plane : Type _} [EuclideanPlane Plane] (e : Setting Plane) : (SEG e.C e.D).length = (SEG e.A e.B).length/2 := by
+theorem result {Plane : Type*} [EuclideanPlane Plane] (e : Setting Plane) : (SEG e.C e.D).length = (SEG e.A e.B).length/2 := by
   have D_ne_A: e.D ≠ e.A := by
     rw[e.hD]
     apply (SegND.midpt_lies_int (seg_nd := SEG_nd e.A e.B (e.B_ne_A))).2.1
@@ -52,12 +52,12 @@ theorem result {Plane : Type _} [EuclideanPlane Plane] (e : Setting Plane) : (SE
     rw[hE]
     apply (SegND.midpt_lies_int (seg_nd := SEG_nd e.A e.C e.C_ne_A)).2.2
   --midpoint lies on the segment
-  have adb_collinear : collinear e.A e.D e.B := by
+  have adb_collinear : Collinear e.A e.D e.B := by
     apply collinear_of_vec_eq_smul_vec'
     use 2
     simp only [e.hD,Seg.midpoint,one_div, seg_toVec_eq_vec, vec_of_pt_vadd_pt_eq_vec,smul_smul]
     norm_num
-  have aec_collinear : collinear e.A E e.C := by
+  have aec_collinear : Collinear e.A E e.C := by
     apply collinear_of_vec_eq_smul_vec'
     use 2
     simp only [hE,Seg.midpoint,one_div, seg_toVec_eq_vec, vec_of_pt_vadd_pt_eq_vec,smul_smul]
@@ -88,26 +88,26 @@ theorem result {Plane : Type _} [EuclideanPlane Plane] (e : Setting Plane) : (SE
     exact hE
     rw[hE]
     apply Seg.midpt_lies_on
-  have not_collinear_ADE: ¬ collinear e.A e.D E := by
+  have not_collinear_ADE: ¬ Collinear e.A e.D E := by
     intro h'
-    have : collinear e.A e.B E := by
+    have : Collinear e.A e.B E := by
       apply collinear_of_collinear_collinear_ne adb_collinear h' D_ne_A
-    have neghnd : collinear e.A e.B e.C := by
-      apply collinear_of_collinear_collinear_ne (flip_collinear_snd_trd this) aec_collinear E_ne_A
+    have neghnd : Collinear e.A e.B e.C := by
+      apply collinear_of_collinear_collinear_ne (Collinear.perm₁₃₂ this) aec_collinear E_ne_A
     exact e.not_collinear_ABC neghnd
-  have not_collinear_CDE : ¬ collinear e.C e.D E := by
+  have not_collinear_CDE : ¬ Collinear e.C e.D E := by
     intro h
-    have : collinear e.C e.D e.A := by
-      apply flip_collinear_snd_trd
+    have : Collinear e.C e.D e.A := by
+      apply Collinear.perm₁₃₂
       apply collinear_of_collinear_collinear_ne
-      apply (flip_collinear_snd_trd (flip_collinear_fst_snd (flip_collinear_snd_trd aec_collinear)))
-      apply flip_collinear_snd_trd h
+      apply (Collinear.perm₁₃₂ (Collinear.perm₂₁₃ (Collinear.perm₁₃₂ aec_collinear)))
+      apply Collinear.perm₁₃₂ h
       apply E_ne_C
-    have : collinear e.A e.B e.C := by
+    have : Collinear e.A e.B e.C := by
       apply collinear_of_collinear_collinear_ne
       apply adb_collinear
       -- apply e.hD
-      apply (flip_collinear_snd_trd (flip_collinear_fst_snd (flip_collinear_snd_trd this)))
+      apply (Collinear.perm₁₃₂ (Collinear.perm₂₁₃ (Collinear.perm₁₃₂ this)))
       apply D_ne_A
     apply e.not_collinear_ABC this
 
@@ -179,12 +179,12 @@ namespace Shan_Problem_1_8
 
 Prove that $FG \perp DE$. -/
 
-structure Setting (Plane : Type _) [EuclideanPlane Plane] where
+structure Setting (Plane : Type*) [EuclideanPlane Plane] where
   -- Let $\triangle ABC$ be a nontrivial triangle in which $\angle ACB= \pi/2$.
   A : Plane
   B : Plane
   C : Plane
-  not_collinear_ABC : ¬ collinear A B C
+  not_collinear_ABC : ¬ Collinear A B C
   -- Claim :$C \ne A$
   C_ne_A : C ≠ A :=
     -- This is because vertices $A, C$ of a nondegenerate triangle are distinct.
@@ -212,7 +212,7 @@ structure Setting (Plane : Type _) [EuclideanPlane Plane] where
   E_ne_D : E ≠ D := sorry
 
 -- Theorem : $FG \perp DE$
-theorem result {Plane : Type _} [EuclideanPlane Plane] (e : Setting Plane) :(SEG_nd e.F e.G e.G_ne_F) ⟂ (SEG_nd e.D e.E e.E_ne_D) := sorry
+theorem result {Plane : Type*} [EuclideanPlane Plane] (e : Setting Plane) :(SEG_nd e.F e.G e.G_ne_F) ⟂ (SEG_nd e.D e.E e.E_ne_D) := sorry
 
 end Shan_Problem_1_8
 

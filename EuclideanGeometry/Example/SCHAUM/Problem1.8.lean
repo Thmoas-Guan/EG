@@ -16,12 +16,12 @@ such that $CD = AE$.
 
 Prove that $AD = BE$
 -/
-structure Setting (Plane : Type _) [EuclideanPlane Plane] where
+structure Setting (Plane : Type*) [EuclideanPlane Plane] where
 --Let $\triangle ABC$ be a regular triangle.
   A : Plane
   B : Plane
   C : Plane
-  not_collinear_ABC : ¬ collinear A B C
+  not_collinear_ABC : ¬ Collinear A B C
   regular_ABC : (▵ A B C).IsRegular
 --Claim $A \ne B$
   A_ne_B : A ≠ B :=
@@ -44,7 +44,7 @@ structure Setting (Plane : Type _) [EuclideanPlane Plane] where
 --such that $CD = AE$
   CD_eq_AE : ((SEG C D).length = (SEG A E).length)
 --Prove that $AD = BE$
-theorem result {Plane : Type _} [EuclideanPlane Plane] (e : Setting Plane) : ((SEG e.A e.D).length = (SEG e.B e.E).length):= by
+theorem result {Plane : Type*} [EuclideanPlane Plane] (e : Setting Plane) : ((SEG e.A e.D).length = (SEG e.B e.E).length):= by
 /-
 In regular triangle $ABC$, $\angle ABC = \angle BCA$.
 Since $D$ lies on the extension of $BC$, we know that $\angle ABD$ is the same as $\angle ABC$.
@@ -61,9 +61,9 @@ Thus, $\triangle BDA \cong \triangle CEB$ (by SAS).
 Therefore, $BD = CE$.
 -/
   --We have that $B, D, A$ is not collinear.
-  have not_collinear_BDA : ¬ collinear e.B e.D e.A := by sorry
+  have not_collinear_BDA : ¬ Collinear e.B e.D e.A := by sorry
   --We have that $C, E, B$ is not collinear.
-  have not_collinear_CEB : ¬ collinear e.C e.E e.B := by sorry
+  have not_collinear_CEB : ¬ Collinear e.C e.E e.B := by sorry
   --We have $D \ne B$.
   have D_ne_B : e.D ≠ e.B := by sorry
   --We have $A \ne B$.

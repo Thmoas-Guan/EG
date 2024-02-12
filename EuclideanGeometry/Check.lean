@@ -9,13 +9,13 @@ Here exhibits unfamiliar codes for learning.
 -/
 
 section HEq
-def T {A A' B : Type _} (e : A = A') (f : A → B) : A' → B := by
+def T {A A' B : Type*} (e : A = A') (f : A → B) : A' → B := by
   rw [← e]
   exact f
-theorem heq {A A' B : Type _} (e : A = A') (f : A → B) : HEq f (T e f) := by
+theorem heq {A A' B : Type*} (e : A = A') (f : A → B) : HEq f (T e f) := by
   subst e
   rfl
-theorem heq' {g : Type _ → Type _ } {A A' B : Type _} (e : g A = g A') (f : g A → B) : HEq f (T e f) := by
+theorem heq' {g : Type* → Type* } {A A' B : Type*} (e : g A = g A') (f : g A → B) : HEq f (T e f) := by
   exact heq e f
 
 #check heq
@@ -24,13 +24,13 @@ theorem heq' {g : Type _ → Type _ } {A A' B : Type _} (e : g A = g A') (f : g 
 #check Eq.ndrec
 #check Eq.mpr
 
-theorem heq_funext' {c₁ c₂ d : Type _} (e : c₁ = c₂) {f₁ : c₁ → d} {f₂ : c₂ → d} (h : ∀ (s : c₁) (t : c₂), (HEq s t) → f₁ s = f₂ t) : HEq f₁ f₂ := by
+theorem heq_funext' {c₁ c₂ d : Type*} (e : c₁ = c₂) {f₁ : c₁ → d} {f₂ : c₂ → d} (h : ∀ (s : c₁) (t : c₂), (HEq s t) → f₁ s = f₂ t) : HEq f₁ f₂ := by
   exact Function.hfunext e (fun s t g => (heq_of_eq (h s t g)))
 
-theorem heq_funext_prop {c₁ c₂ : Prop} {d : Type _} (e : c₁ = c₂) {f₁ : c₁ → d} {f₂ : c₂ → d} (h : ∀ (s : c₁) (t : c₂), f₁ s = f₂ t) : HEq f₁ f₂ := by
+theorem heq_funext_prop {c₁ c₂ : Prop} {d : Type*} (e : c₁ = c₂) {f₁ : c₁ → d} {f₂ : c₂ → d} (h : ∀ (s : c₁) (t : c₂), f₁ s = f₂ t) : HEq f₁ f₂ := by
   exact Function.hfunext e (fun s t _ => (heq_of_eq (h s t)))
 
-theorem heq_funext {c₁ c₂ d: Sort _} (e : c₁ = c₂) {f₁ : c₁ → d} {f₂ : c₂ → d} (h : ∀ (s : c₁) (t : c₂), f₁ s = f₂ t) : HEq f₁ f₂ := Function.hfunext e (fun _ _ _ => (heq_of_eq (h _ _)))
+theorem heq_funext {c₁ c₂ d: Sort*} (e : c₁ = c₂) {f₁ : c₁ → d} {f₂ : c₂ → d} (h : ∀ (s : c₁) (t : c₂), f₁ s = f₂ t) : HEq f₁ f₂ := Function.hfunext e (fun _ _ _ => (heq_of_eq (h _ _)))
 
 
 end HEq
@@ -49,7 +49,7 @@ namespace EuclidGeom
 /- check instance VAdd-/
 section VAddCheck
 
-variable (P : Type _) [EuclidGeom.EuclideanPlane P] (l : Ray P)
+variable (P : Type*) [EuclidGeom.EuclideanPlane P] (l : Ray P)
 #check l.toDir.toVec
 #check @AddAction.toVAdd _ _ _ (@AddTorsor.toAddAction _ _ _ (@NormedAddTorsor.toAddTorsor _ P _ _ _))
 
@@ -64,7 +64,7 @@ end raymk
 /- check angle notation-/
 section anglecheck
 
-variable {P : Type _} [h : EuclideanPlane P] (O : P) (A : P) (B : P)
+variable {P : Type*} [h : EuclideanPlane P] (O : P) (A : P) (B : P)
 #check ANG A O B
 
 variable (l : GDirSeg P)
@@ -72,7 +72,7 @@ variable (l : GDirSeg P)
 
 end anglecheck
 
-variable {P : Type _} [EuclideanPlane P]
+variable {P : Type*} [EuclideanPlane P]
 theorem test_is_on (A : P) (seg : Seg P) : (p LiesOn seg) = (Seg.IsOn p seg) := rfl
 
 
@@ -90,7 +90,7 @@ theorem let_test_prop (α : Prop) (a : α) (p : α → Prop) : (let x := a; p x)
     intro x
     exact x _
 
-def main_theorem (A B C : P) (h : ¬ collinear A B C) : Prop := by
+def main_theorem (A B C : P) (h : ¬ Collinear A B C) : Prop := by
   let hAB : B≠A := by exact (ne_of_not_collinear h).2.2
   let hCB : C ≠ B := by exact (ne_of_not_collinear h).1
   let l₁ := LIN A B hAB
@@ -99,7 +99,7 @@ def main_theorem (A B C : P) (h : ¬ collinear A B C) : Prop := by
   let E := Line.inx l₁ l₂ h'
   exact (E = B)
 
-example (A B C : P) (h : ¬ collinear A B C) : main_theorem A B C h := by
+example (A B C : P) (h : ¬ Collinear A B C) : main_theorem A B C h := by
   unfold main_theorem
   -- rw [let_test (α := B≠A) (a := (ne_of_not_collinear h).2.2) (p := fun x => let hCB := (_ : C ≠ B);
 -- let l₁ := LIN A B x;
